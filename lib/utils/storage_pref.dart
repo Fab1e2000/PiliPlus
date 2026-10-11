@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:PiliPlus/utils/custom_buvid.dart';
+
 import 'package:PiliPlus/common/widgets/gesture/horizontal_drag_gesture_recognizer.dart'
     show deviceTouchSlop;
 import 'package:PiliPlus/common/widgets/pair.dart';
@@ -924,7 +926,25 @@ abstract final class Pref {
   static bool get silentDownImg =>
       _setting.get(SettingBoxKey.silentDownImg, defaultValue: false);
 
+  static String get customAppBuvid =>
+      _localCache.get(LocalCacheKey.customAppBuvid, defaultValue: '') as String;
+
+  static Future<void> saveCustomAppBuvid(String input) async {
+    final value = CustomBuvid.normalize(input);
+    if (value == null) {
+      await _localCache.delete(LocalCacheKey.customAppBuvid);
+    } else {
+      await _localCache.put(LocalCacheKey.customAppBuvid, value);
+    }
+  }
+
   static String get buvid {
+    try {
+      final custom = CustomBuvid.normalize(customAppBuvid);
+      if (custom != null) return custom;
+    } on FormatException {
+      // An invalid restored preference must not replace the existing identity.
+    }
     String? buvid = _localCache.get(LocalCacheKey.buvid);
     if (buvid == null) {
       buvid = LoginUtils.generateBuvid();

@@ -1,3 +1,4 @@
+import 'package:PiliPlus/pages/setting/widgets/custom_buvid_dialog.dart';
 import 'package:PiliPlus/http/video.dart';
 import 'package:PiliPlus/pages/rcmd/controller.dart';
 import 'package:PiliPlus/pages/setting/models/model.dart';
@@ -8,6 +9,12 @@ import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 
 List<SettingsModel> get recommendSettings => [
+  NormalModel(
+    title: 'App BUVID',
+    subtitle: '填写自己的 BUVID；留空使用原随机编号，重启后生效',
+    leading: const Icon(Icons.badge_outlined),
+    onTap: (context, setState) => showCustomBuvidDialog(context),
+  ),
   const SwitchModel(
     title: '首页使用app端推荐',
     subtitle: '若web端推荐不太符合预期，可尝试切换至app端推荐',
